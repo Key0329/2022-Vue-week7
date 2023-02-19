@@ -131,11 +131,6 @@ export default {
     },
   },
   mounted() {
-    const token = document.cookie.replace(
-      /(?:(?:^|.*;\s*)hexVueWeek3Token\s*=\s*([^;]*).*$)|^.*$/,
-      '$1'
-    );
-    this.$http.defaults.headers.common.Authorization = token;
     this.getProductsData();
   },
 };
