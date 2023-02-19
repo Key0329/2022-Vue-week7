@@ -1,20 +1,25 @@
 <script>
+import { mapState, mapActions } from 'pinia';
+import adminOrdersStore from '../../stores/admin/adminOrdersStore';
+
 export default {
   name: 'pagination-component',
-  props: {
-    pages: {
-      type: Object,
-      required: true,
-    },
-    tempUrl: {
-      type: String,
-      required: true,
-    },
+
+  computed: {
+    ...mapState(adminOrdersStore, ['pages', 'tempUrl']),
+  },
+  data() {
+    return {
+      id: '',
+    };
   },
   methods: {
-    changePage(e, page = 1) {
-      this.$emit('emitPage', e, page);
-    },
+    ...mapActions(adminOrdersStore, ['getOrders']),
+  },
+  mounted() {
+    const { id } = this.$route.params;
+    this.id = id;
+    this.getOrders('', id);
   },
 };
 </script>
@@ -25,7 +30,7 @@ export default {
       <li class="page-item">
         <router-link
           :to="`${tempUrl}${pages.current_page - 1}`"
-          @click.prevent="changePage($event, pages.current_page - 1)"
+          @click.prevent="getOrders($event, id, pages.current_page - 1)"
           class="page-link"
           :class="{ disabled: !pages.has_pre }"
           href="#"
@@ -43,7 +48,7 @@ export default {
       >
         <router-link
           :to="`${tempUrl}${page}`"
-          @click="changePage($event, page)"
+          @click="getOrders($event, id, page)"
           class="page-link"
           >{{ page }}</router-link
         >
@@ -52,7 +57,7 @@ export default {
       <li class="page-item">
         <router-link
           :to="`${tempUrl}${pages.current_page + 1}`"
-          @click.prevent="changePage($event, pages.current_page + 1)"
+          @click.prevent="getOrders($event, id, pages.current_page + 1)"
           class="page-link"
           :class="{ disabled: !pages.has_next }"
           aria-label="Next"

@@ -50,11 +50,7 @@
       </tbody>
     </table>
     <div class="d-flex justify-content-center">
-      <pagination-component
-        :pages="pages"
-        :temp-url="tempUrl"
-        @emit-page="getOrders"
-      ></pagination-component>
+      <pagination-component @emit-page="getOrders"></pagination-component>
     </div>
   </div>
 
@@ -67,74 +63,38 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'pinia';
 import PaginationComponent from '../../components/admin/PaginationComponent.vue';
 import DeleteModal from '../../components/admin/DeleteModal.vue';
+import adminOrdersStore from '../../stores/admin/adminOrdersStore';
 
-const { VITE_URL, VITE_PATH } = import.meta.env;
+// const { VITE_PATH, VITE_URL } = import.meta.env;
 
 export default {
   components: {
     PaginationComponent,
     DeleteModal,
   },
-  data() {
-    return {
-      orders: {},
-      tempOrder: {},
-      isPaid: false,
-      pages: {},
-      tempUrl: '',
-    };
+  computed: {
+    ...mapState(adminOrdersStore, [
+      'orders',
+      'tempOrder',
+      'isPaid',
+      'pages',
+      'tempUrl',
+    ]),
   },
   methods: {
-    getOrders(e, page = 1) {
-      const { id } = this.$route.params;
-      let newPage = page;
-      if (!e) {
-        newPage = parseInt(id, 10);
-      }
-
-      this.$http
-        .get(`${VITE_URL}/api/${VITE_PATH}/admin/orders?page=${newPage}`)
-        .then((res) => {
-          this.orders = res.data.orders;
-          this.pages = res.data.pagination;
-          this.tempUrl = '/admin/orders/';
-          console.log(this.orders);
-        })
-        .catch((err) => {
-          alert(err.response.data.message);
-        });
-    },
-    modelHandler(button, order) {
-      if (button === 'editBtn') {
-        this.tempOrder = { ...order };
-        this.$refs.productModal.openModal();
-      } else if (button === 'deleteBtn') {
-        this.tempOrder = { ...order };
-        this.$refs.delOrderModal.openModal();
-      }
-    },
-    deleteOrder() {
-      const { id } = this.tempOrder;
-      this.$http
-        .delete(`${VITE_URL}/api/${VITE_PATH}/admin/order/${id}`)
-        .then((res) => {
-          alert(res.data.message);
-          this.getOrders();
-          this.$refs.delOrderModal.closeModal();
-        })
-        .catch((err) => {
-          alert(err.data.message);
-        });
-    },
     date(time) {
       const localDate = new Date(time * 1000);
       return localDate.toLocaleDateString();
     },
+    ...mapActions(adminOrdersStore, [
+      'getOrders',
+      'modelHandler',
+      'deleteOrder',
+    ]),
   },
-  mounted() {
-    this.getOrders();
-  },
+  mounted() {},
 };
 </script>
