@@ -141,6 +141,16 @@ export default {
         });
     },
   },
+  watch: {
+    '$route.params': {
+      handler(newParams) {
+        if (parseInt(newParams.id, 10) === 1) {
+          this.getProductsData();
+        }
+      },
+      deep: true,
+    },
+  },
   mounted() {
     this.getProductsData();
   },

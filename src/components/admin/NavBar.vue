@@ -18,7 +18,9 @@
         >
       </li>
       <li>
-        <router-link class="text-white text-decoration-none" to="/admin/orders"
+        <router-link
+          class="text-white text-decoration-none"
+          to="/admin/orders/1"
           >訂單</router-link
         >
       </li>

@@ -100,7 +100,6 @@ export default {
           this.orders = res.data.orders;
           this.pages = res.data.pagination;
           this.tempUrl = '/admin/orders/';
-          console.log(this.orders);
         })
         .catch((err) => {
           alert(err.response.data.message);
@@ -131,6 +130,16 @@ export default {
     date(time) {
       const localDate = new Date(time * 1000);
       return localDate.toLocaleDateString();
+    },
+  },
+  watch: {
+    '$route.params': {
+      handler(newParams) {
+        if (parseInt(newParams.id, 10) === 1) {
+          this.getOrders();
+        }
+      },
+      deep: true,
     },
   },
   mounted() {
