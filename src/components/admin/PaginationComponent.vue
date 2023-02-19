@@ -6,10 +6,14 @@ export default {
       type: Object,
       required: true,
     },
+    tempUrl: {
+      type: String,
+      required: true,
+    },
   },
   methods: {
     changePage(e, page = 1) {
-      this.$emit('getProductsData', e, page);
+      this.$emit('emitPage', e, page);
     },
   },
 };
@@ -20,7 +24,7 @@ export default {
     <ul class="pagination">
       <li class="page-item">
         <router-link
-          :to="`/admin/products/${pages.current_page - 1}`"
+          :to="`${tempUrl}${pages.current_page - 1}`"
           @click.prevent="changePage($event, pages.current_page - 1)"
           class="page-link"
           :class="{ disabled: !pages.has_pre }"
@@ -38,7 +42,7 @@ export default {
         :class="{ 'point-none': page === pages.current_page }"
       >
         <router-link
-          :to="`/admin/products/${page}`"
+          :to="`${tempUrl}${page}`"
           @click="changePage($event, page)"
           class="page-link"
           >{{ page }}</router-link
@@ -47,7 +51,7 @@ export default {
 
       <li class="page-item">
         <router-link
-          :to="`/admin/products/${pages.current_page + 1}`"
+          :to="`${tempUrl}${pages.current_page + 1}`"
           @click.prevent="changePage($event, pages.current_page + 1)"
           class="page-link"
           :class="{ disabled: !pages.has_next }"

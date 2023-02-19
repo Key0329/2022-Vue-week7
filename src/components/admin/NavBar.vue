@@ -6,7 +6,7 @@
           <router-link
             class="text-decoration-none text-white"
             to="/admin/products/1"
-            >Steam 後台頁面</router-link
+            >FakeSteam 後台頁面</router-link
           >
         </h1>
       </li>

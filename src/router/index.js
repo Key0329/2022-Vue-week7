@@ -49,7 +49,7 @@ const routes = [
         component: () => import('../views/admin/AdminProductsView.vue'),
       },
       {
-        path: 'orders',
+        path: 'orders/:id(\\d+)?',
         name: 'AdminOrders',
         component: () => import('../views/admin/AdminOrdersView.vue'),
       },

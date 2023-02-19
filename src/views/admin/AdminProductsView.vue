@@ -1,4 +1,4 @@
-<template :key="rerenderKey">
+<template>
   <div class="container">
     <div class="text-end mt-4">
       <button class="btn btn-primary" @click="modelHandler('createBtn')">
@@ -51,7 +51,8 @@
     </table>
     <pagination-component
       :pages="pages"
-      @get-products-data="getProductsData"
+      :temp-url="tempUrl"
+      @emit-page="getProductsData"
     ></pagination-component>
   </div>
 
@@ -75,8 +76,7 @@ import PaginationComponent from '../../components/admin/PaginationComponent.vue'
 import ProductModalComponent from '../../components/admin/ProductModalComponent.vue';
 import DeleteProductModalComponent from '../../components/admin/DeleteProductModalComponent.vue';
 
-const apiUrl = import.meta.env.VITE_URL;
-const apiPath = import.meta.env.VITE_PATH;
+const { VITE_URL, VITE_PATH } = import.meta.env;
 
 export default {
   data() {
@@ -86,6 +86,7 @@ export default {
       isNew: false,
       pages: {},
       rerenderKey: 0,
+      tempUrl: '',
     };
   },
   components: {
@@ -102,11 +103,11 @@ export default {
       }
 
       this.$http
-        .get(`${apiUrl}/api/${apiPath}/admin/products?page=${newPage}`)
+        .get(`${VITE_URL}/api/${VITE_PATH}/admin/products?page=${newPage}`)
         .then((res) => {
           this.products = res.data.products;
           this.pages = res.data.pagination;
-          this.forceRerender();
+          this.tempUrl = '/admin/products/';
         })
         .catch((err) => {
           alert(err.response.data.message);
@@ -125,9 +126,6 @@ export default {
         this.tempProduct = { ...product };
         this.$refs.delProductModal.openModal();
       }
-    },
-    forceRerender() {
-      this.rerenderKey += 1;
     },
   },
   mounted() {

@@ -37,8 +37,12 @@
         </tr>
       </tbody>
     </table>
+    <pagination-component
+      :pages="pages"
+      :temp-url="tempUrl"
+      @emit-page="getOrders"
+    ></pagination-component>
   </div>
-  <pagination-component></pagination-component>
 </template>
 
 <script>
@@ -56,19 +60,36 @@ export default {
       tempOrder: {},
       isPaid: false,
       pages: {},
+      tempUrl: '',
     };
   },
   methods: {
-    getOrders() {
+    getOrders(e, page = 1) {
+      const { id } = this.$route.params;
+      let newPage = page;
+      if (!e) {
+        newPage = parseInt(id, 10);
+      }
+
       this.$http
-        .get(`${VITE_URL}/api/${VITE_PATH}/admin/orders`)
+        .get(`${VITE_URL}/api/${VITE_PATH}/admin/orders?page=${newPage}`)
         .then((res) => {
           this.orders = res.data.orders;
-          console.log(this.orders);
+          this.pages = res.data.pagination;
+          this.tempUrl = '/admin/orders/';
         })
         .catch((err) => {
           alert(err.response.data.message);
         });
+    },
+    modelHandler(button, order) {
+      if (button === 'editBtn') {
+        this.tempOrder = { ...order };
+        this.$refs.productModal.openModal();
+      } else if (button === 'deleteBtn') {
+        this.tempOrder = { ...order };
+        this.$refs.delProductModal.openModal();
+      }
     },
   },
   mounted() {
