@@ -70,7 +70,7 @@
 import PaginationComponent from '../../components/admin/PaginationComponent.vue';
 import DeleteModal from '../../components/admin/DeleteModal.vue';
 
-const { VITE_URL, VITE_PATH } = import.meta.env;
+const { VITE_PATH, VITE_URL } = import.meta.env;
 
 export default {
   components: {
