@@ -64,17 +64,17 @@
     @get-products-data="getProductsData"
   ></product-modal-component>
 
-  <delete-product-modal-component
+  <delete-modal
     ref="delProductModal"
-    :temp-product="tempProduct"
-    @get-products-data="getProductsData"
-  ></delete-product-modal-component>
+    :temp-item="tempProduct"
+    @delete-item="deleteProduct"
+  ></delete-modal>
 </template>
 
 <script>
 import PaginationComponent from '../../components/admin/PaginationComponent.vue';
 import ProductModalComponent from '../../components/admin/ProductModalComponent.vue';
-import DeleteProductModalComponent from '../../components/admin/DeleteProductModalComponent.vue';
+import DeleteModal from '../../components/admin/DeleteModal.vue';
 
 const { VITE_URL, VITE_PATH } = import.meta.env;
 
@@ -92,7 +92,7 @@ export default {
   components: {
     PaginationComponent,
     ProductModalComponent,
-    DeleteProductModalComponent,
+    DeleteModal,
   },
   methods: {
     getProductsData(e, page = 1) {
@@ -126,6 +126,19 @@ export default {
         this.tempProduct = { ...product };
         this.$refs.delProductModal.openModal();
       }
+    },
+    deleteProduct() {
+      const { id } = this.tempProduct;
+      this.$http
+        .delete(`${VITE_URL}/api/${VITE_PATH}/admin/product/${id}`)
+        .then((res) => {
+          alert(res.data.message);
+          this.getProductsData();
+          this.$refs.delProductModal.closeModal();
+        })
+        .catch((err) => {
+          alert(err.data.message);
+        });
     },
   },
   mounted() {

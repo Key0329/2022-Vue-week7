@@ -13,7 +13,7 @@
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.id">
-          <td>{{ order.create_at }}</td>
+          <td>{{ date(order.create_at) }}</td>
           <td>{{ order.user.email }}</td>
           <td>
             <ul class="list-unstyled">
@@ -30,29 +30,52 @@
           <td>{{ order.isPaid ? '已付款' : '未付款' }}</td>
           <td>
             <div class="btn-group">
-              <button class="btn btn-outline-primary">檢視</button>
-              <button class="btn btn-outline-danger">刪除</button>
+              <button
+                type="button"
+                @click="modelHandler('editBtn', order)"
+                class="btn btn-outline-primary"
+              >
+                檢視
+              </button>
+              <button
+                type="button"
+                @click="modelHandler('deleteBtn', order)"
+                class="btn btn-outline-danger"
+              >
+                刪除
+              </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <pagination-component
-      :pages="pages"
-      :temp-url="tempUrl"
-      @emit-page="getOrders"
-    ></pagination-component>
+    <div class="d-flex justify-content-center">
+      <pagination-component
+        :pages="pages"
+        :temp-url="tempUrl"
+        @emit-page="getOrders"
+      ></pagination-component>
+    </div>
   </div>
+
+  <!-- Modal -->
+  <delete-modal
+    ref="delOrderModal"
+    :temp-item="tempOrder"
+    @delete-item="deleteOrder"
+  ></delete-modal>
 </template>
 
 <script>
 import PaginationComponent from '../../components/admin/PaginationComponent.vue';
+import DeleteModal from '../../components/admin/DeleteModal.vue';
 
 const { VITE_URL, VITE_PATH } = import.meta.env;
 
 export default {
   components: {
     PaginationComponent,
+    DeleteModal,
   },
   data() {
     return {
@@ -77,6 +100,7 @@ export default {
           this.orders = res.data.orders;
           this.pages = res.data.pagination;
           this.tempUrl = '/admin/orders/';
+          console.log(this.orders);
         })
         .catch((err) => {
           alert(err.response.data.message);
@@ -88,8 +112,25 @@ export default {
         this.$refs.productModal.openModal();
       } else if (button === 'deleteBtn') {
         this.tempOrder = { ...order };
-        this.$refs.delProductModal.openModal();
+        this.$refs.delOrderModal.openModal();
       }
+    },
+    deleteOrder() {
+      const { id } = this.tempOrder;
+      this.$http
+        .delete(`${VITE_URL}/api/${VITE_PATH}/admin/order/${id}`)
+        .then((res) => {
+          alert(res.data.message);
+          this.getOrders();
+          this.$refs.delOrderModal.closeModal();
+        })
+        .catch((err) => {
+          alert(err.data.message);
+        });
+    },
+    date(time) {
+      const localDate = new Date(time * 1000);
+      return localDate.toLocaleDateString();
     },
   },
   mounted() {

@@ -1,23 +1,17 @@
 <script>
 import Modal from 'bootstrap/js/dist/modal';
 
-const apiUrl = import.meta.env.VITE_URL;
-const apiPath = import.meta.env.VITE_PATH;
-
 export default {
   name: 'delete-product-modal-component',
   props: {
-    tempProduct: {
+    tempItem: {
       type: Object,
       required: true,
     },
   },
   data() {
     return {
-      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-      apiPath: 'key0329',
       bsModal: '',
-      product: {},
     };
   },
   methods: {
@@ -28,48 +22,28 @@ export default {
       this.bsModal.hide();
     },
     deleteProduct() {
-      const { id } = this.product;
-      this.$http
-        .delete(`${apiUrl}/api/${apiPath}/admin/product/${id}`)
-        .then((res) => {
-          alert(res.data.message);
-          this.$emit('get-products-data');
-          this.closeModal();
-        })
-        .catch((err) => {
-          alert(err.data.message);
-        });
-    },
-  },
-  watch: {
-    tempProduct: {
-      handler(newVal) {
-        this.product = {
-          ...newVal,
-        };
-      },
-      deep: true,
+      this.$emit('delete-item');
     },
   },
   mounted() {
-    this.bsModal = new Modal(this.$refs.delProductModal);
+    this.bsModal = new Modal(this.$refs.delModal);
   },
 };
 </script>
 
 <template>
   <div
-    id="delProductModal"
-    ref="delProductModal"
+    id="delModal"
+    ref="delModal"
     class="modal fade"
     tabindex="-1"
-    aria-labelledby="delProductModalLabel"
+    aria-labelledby="delModalLabel"
     aria-hidden="true"
   >
     <div class="modal-dialog">
       <div class="modal-content border-0">
         <div class="modal-header bg-danger text-white">
-          <h5 id="delProductModalLabel" class="modal-title">
+          <h5 id="delModalLabel" class="modal-title">
             <span>刪除產品</span>
           </h5>
           <button
@@ -81,7 +55,9 @@ export default {
         </div>
         <div class="modal-body">
           是否刪除
-          <strong class="text-danger">{{ product.title }}</strong>
+          <strong class="text-danger">{{
+            tempItem.title || tempItem.id
+          }}</strong>
           商品<br />
           (刪除後將無法恢復)。
         </div>
