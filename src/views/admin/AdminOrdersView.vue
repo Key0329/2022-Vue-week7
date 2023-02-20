@@ -106,6 +106,8 @@ export default {
   },
   methods: {
     getOrders(e, page = 1) {
+      const loader = this.$loading.show();
+
       const { id } = this.$route.params;
       let newPage = page;
       if (!e) {
@@ -118,6 +120,7 @@ export default {
           this.orders = res.data.orders;
           this.pages = res.data.pagination;
           this.tempUrl = '/admin/orders/';
+          loader.hide();
         })
         .catch((err) => {
           alert(err.response.data.message);

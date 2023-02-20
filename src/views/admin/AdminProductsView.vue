@@ -97,6 +97,8 @@ export default {
   },
   methods: {
     getProductsData(e, page = 1) {
+      const loader = this.$loading.show();
+
       const { id } = this.$route.params;
       let newPage = page;
       if (!e) {
@@ -109,6 +111,7 @@ export default {
           this.products = res.data.products;
           this.pages = res.data.pagination;
           this.tempUrl = '/admin/products/';
+          loader.hide();
         })
         .catch((err) => {
           alert(err.response.data.message);
