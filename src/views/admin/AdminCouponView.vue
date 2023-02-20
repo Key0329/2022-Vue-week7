@@ -3,7 +3,7 @@ import { mapActions } from 'pinia';
 
 import couponModal from '@/components/admin/CouponModal.vue';
 import PaginationComponent from '../../components/admin/PaginationComponent.vue';
-// import DeleteModal from '../../components/admin/DeleteModal.vue';
+import DeleteModal from '../../components/admin/DeleteModal.vue';
 import filtersStore from '../../stores/filtersStore';
 
 const { VITE_PATH, VITE_URL } = import.meta.env;
@@ -12,7 +12,7 @@ export default {
   components: {
     PaginationComponent,
     couponModal,
-    // DeleteModal,
+    DeleteModal,
   },
   data() {
     return {
@@ -61,6 +61,19 @@ export default {
         this.tempCoupon = { ...coupon };
         this.$refs.delCouponModal.openModal();
       }
+    },
+    deleteCoupon() {
+      const { id } = this.tempCoupon;
+      this.$http
+        .delete(`${VITE_URL}/api/${VITE_PATH}/admin/coupon/${id}`)
+        .then((res) => {
+          alert(res.data.message);
+          this.getCoupons();
+          this.$refs.delCouponModal.closeModal();
+        })
+        .catch((err) => {
+          alert(err.data.message);
+        });
     },
     ...mapActions(filtersStore, ['date']),
   },
@@ -138,9 +151,9 @@ export default {
     @get-coupons="getCoupons"
   ></coupon-modal>
 
-  <!-- <delete-modal
+  <delete-modal
     ref="delCouponModal"
     :temp-item="tempCoupon"
     @delete-item="deleteCoupon"
-  ></delete-modal> -->
+  ></delete-modal>
 </template>

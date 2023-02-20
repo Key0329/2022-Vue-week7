@@ -2,7 +2,7 @@
 import Modal from 'bootstrap/js/dist/modal';
 
 export default {
-  name: 'delete-product-modal-component',
+  name: 'delete-modal-component',
   props: {
     tempItem: {
       type: Object,
@@ -21,7 +21,7 @@ export default {
     closeModal() {
       this.bsModal.hide();
     },
-    deleteProduct() {
+    deleteItem() {
       this.$emit('delete-item');
     },
   },
@@ -69,7 +69,7 @@ export default {
           >
             取消
           </button>
-          <button type="button" class="btn btn-danger" @click="deleteProduct">
+          <button type="button" class="btn btn-danger" @click="deleteItem">
             確認刪除
           </button>
         </div>
