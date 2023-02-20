@@ -1,5 +1,10 @@
 <template>
   <div class="container py-4">
+    <div class="d-flex justify-content-end mb-2">
+      <button type="button" class="btn btn-danger" @click="deleteAllOrders">
+        刪除全部訂單
+      </button>
+    </div>
     <table class="table text-start">
       <thead>
         <tr>
@@ -120,7 +125,6 @@ export default {
       if (button === 'editBtn') {
         this.tempOrder = { ...order };
         this.$refs.orderModal.openModal();
-        console.log(this.tempOrder);
       } else if (button === 'deleteBtn') {
         this.tempOrder = { ...order };
         this.$refs.delOrderModal.openModal();
@@ -130,6 +134,18 @@ export default {
       const { id } = this.tempOrder;
       this.$http
         .delete(`${VITE_URL}/api/${VITE_PATH}/admin/order/${id}`)
+        .then((res) => {
+          alert(res.data.message);
+          this.getOrders();
+          this.$refs.delOrderModal.closeModal();
+        })
+        .catch((err) => {
+          alert(err.data.message);
+        });
+    },
+    deleteAllOrders() {
+      this.$http
+        .delete(`${VITE_URL}/api/${VITE_PATH}/admin/orders/all`)
         .then((res) => {
           alert(res.data.message);
           this.getOrders();
