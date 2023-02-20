@@ -3,9 +3,7 @@
     <ul class="list-unstyled d-flex gap-4 mb-0 align-items-center">
       <li>
         <h1 class="text-start fs-5 mb-0">
-          <router-link
-            class="text-decoration-none text-white"
-            to="/admin/products/1"
+          <router-link class="text-decoration-none text-white" to="/admin"
             >FakeSteam 後台頁面</router-link
           >
         </h1>
