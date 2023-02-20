@@ -31,7 +31,7 @@
               </li>
             </ul>
           </td>
-          <td>{{ order.total }}</td>
+          <td>{{ currency(order.total) }}</td>
           <td>
             <span v-if="order.is_paid" class="text-success">已付款</span
             ><span v-else class="text-danger">尚未付款</span>
@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia';
+import filtersStore from '../../stores/filtersStore';
 import PaginationComponent from '../../components/admin/PaginationComponent.vue';
 import DeleteModal from '../../components/admin/DeleteModal.vue';
 import OrderModal from '../../components/admin/OrderModal.vue';
@@ -155,10 +157,7 @@ export default {
           alert(err.data.message);
         });
     },
-    date(time) {
-      const localDate = new Date(time * 1000);
-      return localDate.toLocaleDateString();
-    },
+    ...mapActions(filtersStore, ['date', 'currency']),
   },
   watch: {
     '$route.params': {

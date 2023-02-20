@@ -1,5 +1,7 @@
 <script>
 import Modal from 'bootstrap/js/dist/modal';
+import { mapActions } from 'pinia';
+import filtersStore from '../../stores/filtersStore';
 
 const { VITE_URL, VITE_PATH } = import.meta.env;
 
@@ -40,6 +42,7 @@ export default {
           alert(err.data.message);
         });
     },
+    ...mapActions(filtersStore, ['date', 'currency']),
   },
   watch: {
     tempOrder: {
@@ -114,13 +117,13 @@ export default {
                   </tr>
                   <tr>
                     <th>下單時間</th>
-                    <td>{{ order.create_at }}</td>
+                    <td>{{ date(order.create_at) }}</td>
                   </tr>
                   <tr>
                     <th>付款時間</th>
                     <td>
                       <span v-if="order.paid_date">
-                        {{ $filters.date(order.paid_date) }}
+                        {{ date(order.paid_date) }}
                       </span>
                       <span v-else>時間不正確</span>
                     </td>
@@ -135,7 +138,7 @@ export default {
                   </tr>
                   <tr>
                     <th>總金額</th>
-                    <td>{{ order.total }}</td>
+                    <td>{{ currency(order.total) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -145,7 +148,7 @@ export default {
                   <tr v-for="product in order.products" :key="product.id">
                     <th>{{ product.product.title }}</th>
                     <td>{{ product.qty }} / {{ product.product.unit }}</td>
-                    <td>{{ product.final_total }}</td>
+                    <td>{{ date(product.final_total) }}</td>
                   </tr>
                 </tbody>
               </table>

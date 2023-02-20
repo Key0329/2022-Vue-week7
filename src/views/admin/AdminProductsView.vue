@@ -21,8 +21,8 @@
         <tr v-for="product in products" :key="product.id">
           <td>{{ product.category }}</td>
           <td>{{ product.title }}</td>
-          <td class="text-start">NT$ {{ product.origin_price }}</td>
-          <td class="text-start">NT$ {{ product.price }}</td>
+          <td class="text-start">NT$ {{ currency(product.origin_price) }}</td>
+          <td class="text-start">NT$ {{ currency(product.price) }}</td>
           <td class="text-center">{{ product.review }}</td>
           <td>
             <span v-if="product.is_enabled" class="text-success">啟用</span>
@@ -72,6 +72,8 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia';
+import filtersStore from '../../stores/filtersStore';
 import PaginationComponent from '../../components/admin/PaginationComponent.vue';
 import ProductModalComponent from '../../components/admin/ProductModalComponent.vue';
 import DeleteModal from '../../components/admin/DeleteModal.vue';
@@ -85,7 +87,6 @@ export default {
       tempProduct: {},
       isNew: false,
       pages: {},
-      rerenderKey: 0,
       tempUrl: '',
     };
   },
@@ -140,6 +141,7 @@ export default {
           alert(err.data.message);
         });
     },
+    ...mapActions(filtersStore, ['currency']),
   },
   watch: {
     '$route.params': {
