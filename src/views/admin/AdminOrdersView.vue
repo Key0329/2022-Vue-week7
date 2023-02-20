@@ -27,7 +27,10 @@
             </ul>
           </td>
           <td>{{ order.total }}</td>
-          <td>{{ order.isPaid ? '已付款' : '未付款' }}</td>
+          <td>
+            <span v-if="order.is_paid" class="text-success">已付款</span
+            ><span v-else class="text-danger">尚未付款</span>
+          </td>
           <td>
             <div class="btn-group">
               <button
@@ -59,6 +62,12 @@
   </div>
 
   <!-- Modal -->
+  <order-modal
+    ref="orderModal"
+    :temp-order="tempOrder"
+    @get-orders="getOrders"
+  ></order-modal>
+
   <delete-modal
     ref="delOrderModal"
     :temp-item="tempOrder"
@@ -69,6 +78,7 @@
 <script>
 import PaginationComponent from '../../components/admin/PaginationComponent.vue';
 import DeleteModal from '../../components/admin/DeleteModal.vue';
+import OrderModal from '../../components/admin/OrderModal.vue';
 
 const { VITE_PATH, VITE_URL } = import.meta.env;
 
@@ -76,6 +86,7 @@ export default {
   components: {
     PaginationComponent,
     DeleteModal,
+    OrderModal,
   },
   data() {
     return {
@@ -108,7 +119,8 @@ export default {
     modelHandler(button, order) {
       if (button === 'editBtn') {
         this.tempOrder = { ...order };
-        this.$refs.productModal.openModal();
+        this.$refs.orderModal.openModal();
+        console.log(this.tempOrder);
       } else if (button === 'deleteBtn') {
         this.tempOrder = { ...order };
         this.$refs.delOrderModal.openModal();

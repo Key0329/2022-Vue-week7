@@ -1,8 +1,7 @@
 <script>
 import Modal from 'bootstrap/js/dist/modal';
 
-const apiUrl = import.meta.env.VITE_URL;
-const apiPath = import.meta.env.VITE_PATH;
+const { VITE_URL, VITE_PATH } = import.meta.env;
 
 export default {
   name: 'product-modal-component',
@@ -58,7 +57,7 @@ export default {
         return;
       }
       this.$http
-        .post(`${apiUrl}/api/${apiPath}/admin/product`, { data })
+        .post(`${VITE_URL}/api/${VITE_PATH}/admin/product`, { data })
         .then((res) => {
           alert(res.data.message);
           this.$emit('get-products-data');
@@ -84,7 +83,7 @@ export default {
         return;
       }
       this.$http
-        .put(`${apiUrl}/api/${apiPath}/admin/product/${id}`, {
+        .put(`${VITE_URL}/api/${VITE_PATH}/admin/product/${id}`, {
           data,
         })
         .then((res) => {
@@ -109,7 +108,7 @@ export default {
     },
     sendFormData(type, key, form) {
       this.$http
-        .post(`${apiUrl}/api/${apiPath}/admin/upload`, form)
+        .post(`${VITE_URL}/api/${VITE_PATH}/admin/upload`, form)
         .then((res) => {
           const url = res.data.imageUrl;
           if (type === 'multi') {
