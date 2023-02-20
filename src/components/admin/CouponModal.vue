@@ -41,8 +41,9 @@ export default {
         !this.coupon.percent ||
         !this.coupon.is_enabled
       ) {
-        alert('標題 / 優惠碼 / 到期日 / 折扣百分比 / 是否啟用 為必填欄位');
-
+        alert(
+          '標題 / 優惠碼 / 到期日 / 折扣百分比 / 請先啟用優惠券 為必填欄位'
+        );
         return;
       }
       this.$http
@@ -63,13 +64,11 @@ export default {
 
       if (
         !this.coupon.title ||
-        !this.coupon.category ||
-        !this.coupon.unit ||
-        !this.coupon.price ||
-        !this.coupon.origin_price
+        !this.coupon.code ||
+        !this.coupon.due_date ||
+        !this.coupon.percent
       ) {
-        alert('標題 / 分類 / 單位 / 原價 / 售價 為必填欄位');
-        // eslint-disable-next-line no-useless-return
+        alert('標題 / 優惠碼 / 到期日 / 折扣百分比 為必填欄位');
         return;
       }
       this.$http
@@ -78,7 +77,7 @@ export default {
         })
         .then((res) => {
           alert(res.data.message);
-          this.$emit('get-coupons-data');
+          this.$emit('get-coupons');
           this.closeModal();
         })
         .catch((err) => {
@@ -182,19 +181,18 @@ export default {
             />
           </div>
           <div class="mb-3">
-            <div class="form-check form-switch">
+            <div class="form-check">
+              <label for="coupon-is_enabled" class="form-check-label"
+                >啟用</label
+              >
               <input
                 id="coupon-is_enabled"
                 type="checkbox"
-                role="switch"
                 class="form-check-input"
                 :true-value="1"
                 :false-value="0"
                 v-model="coupon.is_enabled"
               />
-              <label for="coupon-is_enabled" class="form-check-label"
-                >是否啟用</label
-              >
             </div>
           </div>
         </div>
